@@ -118,6 +118,21 @@ covers the browser tab, but iOS home screens need `apple-touch-icon.png` and And
 `manifest.webmanifest` — without those, a bookmark falls back to a generated letter tile.
 The maskable variant carries extra padding so Android's circle crop doesn't clip the glove.
 
+## iPhone safe areas
+
+The layout keeps clear of the Dynamic Island, the notch, and the home indicator. Insets are
+read once into `--safe-top/right/bottom/left` in `src/index.css` and applied to the sticky
+top bar, the page gutters, the first-run screen, and the bottom sheets — so a test (or you)
+can fake an iPhone by overriding those variables in devtools:
+
+```js
+document.documentElement.style.setProperty('--safe-top', '59px');
+```
+
+The status bar style is `default` on purpose. `black-translucent` runs the app full-screen
+*behind* the status bar, which is what put the header under the island and the clock on top
+of the title.
+
 ## Develop
 
 ```bash
