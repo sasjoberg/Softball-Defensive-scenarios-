@@ -6,12 +6,18 @@ export const DEFAULT_SETTINGS = {
   relaySide: 'standard', // 'standard' = SS relays left/left-center, 2B relays right/right-center
   // Who covers second on a steal.
   stealCoverage: 'rh-ss', // right-handed batter -> SS covers
+  // Who lines up as the cutoff on a throw to the plate.
+  homeCutoff: 'corners', // 1B cuts right-side balls, 3B cuts left-side balls
 };
 
 export const SETTING_OPTIONS = {
   relaySide: [
     { id: 'standard', label: 'SS relays left side, 2B relays right side', note: 'Most common' },
     { id: 'swapped', label: 'SS relays right side, 2B relays left side' },
+  ],
+  homeCutoff: [
+    { id: 'corners', label: '1B cuts the right side, 3B cuts the left side', note: 'Most common' },
+    { id: 'first', label: 'First baseman cuts every throw home' },
   ],
   stealCoverage: [
     { id: 'rh-ss', label: 'Righty at the plate → SS covers 2nd', note: 'Most common' },
@@ -51,6 +57,13 @@ function swapMiddleInfielders(responsibilities) {
 export function resolveScenario(scenario, settings = DEFAULT_SETTINGS) {
   const tags = scenario.tags || [];
   let responsibilities = scenario.responsibilities;
+
+  // Scenario-specific overrides for a named setting value, e.g. the cutoff on a
+  // throw home moving from third base to first.
+  for (const [setting, byValue] of Object.entries(scenario.variants || {})) {
+    const override = byValue[settings[setting]];
+    if (override) responsibilities = { ...responsibilities, ...override };
+  }
 
   if (tags.includes('relay') && settings.relaySide === 'swapped') {
     responsibilities = swapMiddleInfielders(responsibilities);

@@ -337,19 +337,32 @@ export const SCENARIOS = [
         move: { to: 'single-LF' },
         throw: { to: { between: ['single-LF', 'home'], t: 0.62 }, order: 1 },
       }),
-      '1B': relay('home', 'First baseman is the cutoff on every throw home. Line up between the ball and the plate.', {
+      '3B': relay('home', 'Ball on the left side, so third base is the cutoff. Line up between the ball and the plate.', {
         move: { to: { between: ['single-LF', 'home'], t: 0.62 } },
         throw: { to: 'home', order: 2 },
       }),
+      SS: cover('3B', 'She went out to cut it, so third is yours. Always fill behind the cutoff.'),
       C: cover('home', 'Set up, give a lane, and call cut or let it go — she cannot see the runner.'),
-      '3B': cover('3B', 'Batter-runner may try to stretch it. Own your bag.'),
       '2B': cover('2B', 'Somebody is at second on every base hit. That is you.'),
-      SS: backup('2B', 'Trail behind second for a throw behind the batter-runner.'),
+      '1B': cover('1B', 'Stay with your bag — the batter-runner is rounding hard.'),
       P: backup('home', 'Get behind the catcher. If the cutoff lets it go, you are the last line.'),
       CF: backup('ball', 'Run over behind left field.', {
         move: { to: { between: ['CF', 'single-LF'], t: 0.7 } },
       }),
       RF: backup('2B', 'Long way over, but back up second on the throw in.'),
+    },
+    variants: {
+      // teams that send the first baseman to cut every throw home
+      homeCutoff: {
+        first: {
+          '1B': relay('home', 'First baseman cuts every throw home. Line up between the ball and the plate.', {
+            move: { to: { between: ['single-LF', 'home'], t: 0.62 } },
+            throw: { to: 'home', order: 2 },
+          }),
+          '3B': cover('3B', 'Batter-runner may try to stretch it. Own your bag.'),
+          SS: backup('2B', 'Trail behind second for a throw behind the batter-runner.'),
+        },
+      },
     },
   },
 
@@ -497,21 +510,33 @@ export const SCENARIOS = [
         move: { to: 'medium-LF' },
         throw: { to: { between: ['medium-LF', 'home'], t: 0.6 }, order: 1 },
       }),
-      '1B': relay('home', 'First baseman is the cutoff on throws home. Line up and listen for the catcher.', {
+      '3B': relay('home', 'Ball to left, so third base cuts it. Tag her up, then get out and line up with the plate.', {
         move: { to: { between: ['medium-LF', 'home'], t: 0.6 } },
         throw: { to: 'home', order: 2 },
       }),
+      SS: cover('3B', 'Fill behind the cutoff — third belongs to you once she leaves it.'),
       C: cover('home', 'Give her a lane, then block and tag. This is your out.'),
-      '3B': cover('3B', 'Stand on the bag until she leaves it — make sure she does not go early.'),
       '2B': cover('2B', 'Own second in case the batter-runner does something silly.'),
-      SS: backup('ball', 'Trail out toward left as the safety in case the ball drops.', {
-        move: { to: { between: ['SS', 'medium-LF'], t: 0.45 } },
-      }),
+      '1B': cover('1B', 'Hold your bag and watch the batter.'),
       P: backup('home', 'Behind the catcher on every throw to the plate.'),
       CF: backup('ball', 'Get behind her on the catch.', {
         move: { to: { between: ['CF', 'medium-LF'], t: 0.7 } },
       }),
       RF: backup('2B', 'Come in behind second on the throw in.'),
+    },
+    variants: {
+      homeCutoff: {
+        first: {
+          '1B': relay('home', 'First baseman cuts every throw home. Line up and listen for the catcher.', {
+            move: { to: { between: ['medium-LF', 'home'], t: 0.6 } },
+            throw: { to: 'home', order: 2 },
+          }),
+          '3B': cover('3B', 'Stand on the bag until she leaves it — make sure she does not go early.'),
+          SS: backup('ball', 'Trail out toward left as the safety in case the ball drops.', {
+            move: { to: { between: ['SS', 'medium-LF'], t: 0.45 } },
+          }),
+        },
+      },
     },
   },
 

@@ -3,7 +3,7 @@
 import { SCENARIOS, scenariosForPosition } from '../src/data/scenarios.js';
 import { JOB_BY_ID, TARGETS } from '../src/data/jobs.js';
 import { POSITION_ORDER, resolveSpot, HOME, FENCE_R } from '../src/data/field.js';
-import { resolveScenario } from '../src/lib/coverage.js';
+import { resolveScenario, DEFAULT_SETTINGS, SETTING_OPTIONS } from '../src/lib/coverage.js';
 import { buildPlayPlan } from '../src/lib/playPlan.js';
 
 const errors = [];
@@ -40,8 +40,16 @@ for (const scenario of SCENARIOS) {
     errors.push(`${at}: ball spot — ${e.message}`);
   }
 
-  for (const [pos, job] of Object.entries(scenario.responsibilities)) {
-    const where = `${at}/${pos}`;
+  const jobSets = [
+    ['', scenario.responsibilities],
+    ...Object.entries(scenario.variants || {}).flatMap(([setting, byValue]) =>
+      Object.entries(byValue).map(([value, resp]) => [` ${setting}=${value}`, resp]),
+    ),
+  ];
+
+  for (const [variantLabel, resp] of jobSets)
+  for (const [pos, job] of Object.entries(resp)) {
+    const where = `${at}${variantLabel}/${pos}`;
     check(POSITION_ORDER.includes(pos), `${where}: unknown position`);
     const def = JOB_BY_ID[job.job];
     check(Boolean(def), `${where}: unknown job "${job.job}"`);
@@ -64,18 +72,31 @@ for (const scenario of SCENARIOS) {
     if (job.throw) check([1, 2].includes(job.throw.order), `${where}: throw needs order 1 or 2`);
   }
 
+  for (const [setting, byValue] of Object.entries(scenario.variants || {})) {
+    check(setting in DEFAULT_SETTINGS, `${at}: variant for unknown setting "${setting}"`);
+    for (const value of Object.keys(byValue)) {
+      const allowed = (SETTING_OPTIONS[setting] || []).map((o) => o.id);
+      check(allowed.includes(value), `${at}: variant "${setting}=${value}" is not a valid option`);
+    }
+  }
+
   // Every scenario must render a play plan under every settings combination.
   for (const relaySide of ['standard', 'swapped']) {
     for (const stealCoverage of ['rh-ss', 'rh-2b', 'ss-always', '2b-always']) {
-      const resolved = resolveScenario(scenario, { relaySide, stealCoverage });
+    for (const homeCutoff of ['corners', 'first']) {
+      const resolved = resolveScenario(scenario, { relaySide, stealCoverage, homeCutoff });
       for (const pos of Object.keys(resolved.responsibilities)) {
-        check(Boolean(resolved.responsibilities[pos]), `${at}: undefined responsibility for ${pos} under ${relaySide}/${stealCoverage}`);
+        check(
+          Boolean(resolved.responsibilities[pos]),
+          `${at}: undefined responsibility for ${pos} under ${relaySide}/${stealCoverage}/${homeCutoff}`,
+        );
       }
       try {
-        buildPlayPlan(resolved, 'SS');
+        for (const pos of POSITION_ORDER) buildPlayPlan(resolved, pos);
       } catch (e) {
-        errors.push(`${at} (${relaySide}/${stealCoverage}): plan build failed — ${e.message}`);
+        errors.push(`${at} (${relaySide}/${stealCoverage}/${homeCutoff}): plan build failed — ${e.message}`);
       }
+    }
     }
   }
 }

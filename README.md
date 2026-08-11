@@ -51,11 +51,15 @@ uses the native share sheet where the browser supports it and falls back to copy
    not give one). *See the whole defense* lists all nine assignments, like the facing page
    in the book.
 
-## Two modes
+## Three modes
 
 - **Quiz** — the drill above, with streaks and per-position accuracy.
 - **Study** — flip through every situation for a position with the answer and diagram
   already showing. No scoring. This is the "learn a new position" mode.
+- **21 Outs** — seven innings against a running clock. Every batter is a rep: call it right
+  and that is an out, miss it and she is safe and you go again, so the clock does the
+  punishing. Ends with your time, how many you were clean on first look, and your errors;
+  the fastest game on the device is kept as the record to beat.
 
 ## Team coverage settings
 
@@ -63,8 +67,14 @@ Coverage systems vary team to team, so the two assignments that actually differ 
 configurable in the settings sheet (⚙️), and every answer in the app follows the setting:
 
 - **Relay on deep balls** — SS relays the left side and 2B the right side (default), or swapped.
+- **Cutoff on throws home** — 1B cuts right-side balls and 3B cuts left-side balls
+  (default), or the 1B cuts every throw home.
 - **Steal coverage** — righty at the plate → SS covers (default), righty → 2B covers,
   or shortstop/second baseman always.
+
+Changing the cutoff rule moves more than one job: when third base goes out to cut, the
+shortstop fills behind her at the bag. Scenarios carry a `variants` block for exactly this
+— see S11 and S17.
 
 The seed bank is written in the most common convention. Flipping a setting remaps the
 middle-infield responsibilities on every affected scenario.
@@ -106,10 +116,12 @@ Adding more is just another object in the same shape:
 - Steals set `ball.type: 'steal'` and `ball.advance: { from, to }` — the diagram shows the
   runner's jump instead of a batted ball.
 - Tag a scenario `['relay']` or `['steal']` to make it follow the coverage settings.
+- `variants: { <setting>: { <value>: { …responsibilities } } }` overrides individual
+  positions when a setting is set to that value — used for the home-cutoff systems.
 
 Run `npm run validate` after editing: it checks every job id, target, and spot reference,
 verifies each batted ball lands inside the fence, confirms each position still has reps,
-and builds the play plan under all eight settings combinations.
+and builds a play plan for all nine positions under every settings combination.
 
 ## Icons
 

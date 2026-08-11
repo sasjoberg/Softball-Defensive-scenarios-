@@ -4,6 +4,7 @@ import Onboarding from './components/Onboarding.jsx';
 import PositionPicker from './components/PositionPicker.jsx';
 import QuizView from './components/QuizView.jsx';
 import StudyView from './components/StudyView.jsx';
+import GameView from './components/GameView.jsx';
 import SettingsPanel from './components/SettingsPanel.jsx';
 import SharePanel from './components/SharePanel.jsx';
 import StatsPanel from './components/StatsPanel.jsx';
@@ -70,24 +71,22 @@ export default function App() {
       </header>
 
       <div className="mode-toggle" role="tablist">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === 'quiz'}
-          className={mode === 'quiz' ? 'is-active' : ''}
-          onClick={() => setMode('quiz')}
-        >
-          Quiz
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === 'study'}
-          className={mode === 'study' ? 'is-active' : ''}
-          onClick={() => setMode('study')}
-        >
-          Study
-        </button>
+        {[
+          ['quiz', 'Quiz'],
+          ['study', 'Study'],
+          ['game', '21 Outs'],
+        ].map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={mode === id}
+            className={mode === id ? 'is-active' : ''}
+            onClick={() => setMode(id)}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       <main>
@@ -98,6 +97,16 @@ export default function App() {
             position={position}
             settings={settings}
             stats={stats}
+            athlete={athlete}
+            onRecord={record}
+            onChangePosition={() => setPosition(null)}
+          />
+        )}
+        {position && mode === 'game' && (
+          <GameView
+            key={`game-${position}`}
+            position={position}
+            settings={settings}
             athlete={athlete}
             onRecord={record}
             onChangePosition={() => setPosition(null)}
