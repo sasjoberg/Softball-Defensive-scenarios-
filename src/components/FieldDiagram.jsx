@@ -90,6 +90,7 @@ export default function FieldDiagram({
   onSelectPosition = null,
   runners,
   youTag = 'YOU',
+  highlight = [],
 }) {
   const [t, setT] = useState(1);
   const frame = useRef(0);
@@ -177,11 +178,12 @@ export default function FieldDiagram({
         const mover = plan?.movers.find((m) => m.key === key);
         const at = revealed && mover ? lerp(mover.from, mover.to, moveP) : { x: base.x, y: base.y };
         const isYou = key === herPosition;
+        const isMine = highlight.includes(key);
         const clickable = Boolean(onSelectPosition);
         return (
           <g
             key={key}
-            className={`fd-player${isYou ? ' is-you' : ''}${clickable ? ' is-clickable' : ''}`}
+            className={`fd-player${isYou ? ' is-you' : ''}${isMine ? ' is-mine' : ''}${clickable ? ' is-clickable' : ''}`}
             onClick={clickable ? () => onSelectPosition(key) : undefined}
             onKeyDown={
               clickable

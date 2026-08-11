@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SETTING_OPTIONS } from '../lib/coverage.js';
+import PositionChips from './PositionChips.jsx';
 import { cleanName, cleanNumber, NAME_MAX } from '../lib/useAthlete.js';
 
 function Group({ title, blurb, name, value, onChange }) {
@@ -28,18 +29,20 @@ function Group({ title, blurb, name, value, onChange }) {
 export default function SettingsPanel({ settings, athlete, onSaveAthlete, onChange, onClose, onResetStats }) {
   const [name, setName] = useState(athlete?.name || '');
   const [number, setNumber] = useState(athlete?.number || '');
+  const positions = athlete?.positions ?? [];
 
   // Keep the stored athlete in step with the fields as she types.
   const editName = (value) => {
     const next = cleanName(value);
     setName(next);
-    onSaveAthlete({ name: next, number });
+    onSaveAthlete({ name: next, number, positions });
   };
   const editNumber = (value) => {
     const next = cleanNumber(value);
     setNumber(next);
-    onSaveAthlete({ name, number: next });
+    onSaveAthlete({ name, number: next, positions });
   };
+  const editPositions = (next) => onSaveAthlete({ name, number, positions: next });
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -78,6 +81,13 @@ export default function SettingsPanel({ settings, athlete, onSaveAthlete, onChan
                 className="field-number"
               />
             </label>
+          </div>
+          <div className="field">
+            <span>Your spots</span>
+            <PositionChips selected={positions} onToggle={editPositions} />
+            <p className="field-note">
+              Flags them on the position picker. Every position stays playable either way.
+            </p>
           </div>
         </div>
 

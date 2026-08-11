@@ -9,11 +9,14 @@ Built for a phone in the dugout: big tap targets, no typing anywhere, one-handed
 
 ## First run
 
-The app opens once with a name and number field. Whatever she enters shows up as the app
+The app opens once with a name field, a number field, and an optional row of position
+chips for the spots she actually plays. Whatever she enters shows up as the app
 title (*Maggie's Reps*), in the header next to her position (*Second Base · #26*), on her
 dot in the field diagram (a gold **26** badge instead of a plain YOU tag), and in a few of
-the celebration lines (*Locked in, Maggie!*). Both fields are optional — *Skip for now*
-works — and both are editable later under ⚙️ → Who's playing.
+the celebration lines (*Locked in, Maggie!*). Her spots get flagged gold on the position
+picker — on the field diagram and the list — with copy that keeps the other seven just as
+open. All three fields are optional — *Skip for now* works, and nothing is flagged if she
+skips — and all three are editable later under ⚙️ → Who's playing.
 
 It is stored on that device only. Nothing is uploaded, and each phone that opens the link
 gets its own name, number, and progress.
@@ -27,8 +30,8 @@ uses the native share sheet where the browser supports it and falls back to copy
 
 ## The loop
 
-1. **Pick a position** — tap a dot on the field or a card from the list. 2B and SS are
-   highlighted as "your spots," but all nine are playable.
+1. **Pick a position** — tap a dot on the field or a card from the list. The spots she
+   named as her own are flagged gold, but all nine are always playable.
 2. **Read the situation** — a broadcast-style readout across the top (lit bases, outs,
    and the count), the situation in one sentence, and the ball flying out to where it was
    hit so you can see the play you're reading before you answer.

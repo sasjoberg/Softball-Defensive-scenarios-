@@ -34,7 +34,6 @@ export const POSITIONS = {
 };
 
 export const POSITION_ORDER = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'];
-export const HER_POSITIONS = ['2B', 'SS'];
 
 // Named landing spots for batted balls and the standing spots fielders move to.
 export const SPOTS = {

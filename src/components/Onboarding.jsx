@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import DiamondMark from './DiamondMark.jsx';
+import PositionChips from './PositionChips.jsx';
 import { cleanName, cleanNumber, NAME_MAX } from '../lib/useAthlete.js';
 
 /** First run: the only place in the app that asks for typing. */
 export default function Onboarding({ onDone }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [positions, setPositions] = useState([]);
 
   return (
     <div className="onboard">
@@ -44,10 +46,20 @@ export default function Onboarding({ onDone }) {
         />
       </label>
 
-      <button type="button" className="primary" onClick={() => onDone({ name, number })}>
+      <div className="field">
+        <span>Your spots — optional</span>
+        <PositionChips selected={positions} onToggle={setPositions} />
+        <p className="field-note">Just flags them on the picker. Every position stays playable.</p>
+      </div>
+
+      <button type="button" className="primary" onClick={() => onDone({ name, number, positions })}>
         Let's get to work
       </button>
-      <button type="button" className="ghost" onClick={() => onDone({ name: '', number: '' })}>
+      <button
+        type="button"
+        className="ghost"
+        onClick={() => onDone({ name: '', number: '', positions: [] })}
+      >
         Skip for now
       </button>
     </div>
