@@ -2,10 +2,12 @@ import FieldDiagram from './FieldDiagram.jsx';
 import { POSITIONS, POSITION_ORDER, HER_POSITIONS } from '../data/field.js';
 import { scenariosForPosition } from '../data/scenarios.js';
 
-export default function PositionPicker({ onPick, stats }) {
+export default function PositionPicker({ onPick, stats, athlete }) {
   return (
     <div className="picker">
-      <p className="picker-lead">Tap your position to start getting reps.</p>
+      <p className="picker-lead">
+        {athlete?.name ? `Tap your position, ${athlete.name}.` : 'Tap your position to start getting reps.'}
+      </p>
       <div className="picker-field">
         <FieldDiagram scenario={null} herPosition={null} onSelectPosition={onPick} runners={[]} />
       </div>

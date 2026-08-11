@@ -8,13 +8,14 @@ import { resolveScenario } from '../lib/coverage.js';
 import { describeAnswer } from '../data/jobs.js';
 import { isCorrect, randomAffirmation } from '../lib/grading.js';
 import { drawCount } from '../lib/count.js';
+import { jerseyTag } from '../lib/useAthlete.js';
 
 function drawScenario(pool, avoidId) {
   const options = pool.length > 1 ? pool.filter((s) => s.id !== avoidId) : pool;
   return options[Math.floor(Math.random() * options.length)];
 }
 
-export default function QuizView({ position, settings, stats, onRecord, onChangePosition }) {
+export default function QuizView({ position, settings, stats, athlete, onRecord, onChangePosition }) {
   const pool = useMemo(() => scenariosForPosition(position), [position]);
   const [raw, setRaw] = useState(() => drawScenario(pool, null));
   const [selection, setSelection] = useState(null);
@@ -43,7 +44,7 @@ export default function QuizView({ position, settings, stats, onRecord, onChange
     setAttempts(nextAttempts);
 
     if (correct) {
-      setAffirmation(randomAffirmation());
+      setAffirmation(randomAffirmation(athlete?.name));
       setPhase('correct');
       setPlayToken((n) => n + 1);
     } else if (nextAttempts >= 2) {
@@ -86,6 +87,7 @@ export default function QuizView({ position, settings, stats, onRecord, onChange
           herPosition={position}
           revealed={revealed}
           playToken={playToken}
+          youTag={jerseyTag(athlete)}
         />
         {revealed && (
           <button type="button" className="ghost replay" onClick={() => setPlayToken((n) => n + 1)}>

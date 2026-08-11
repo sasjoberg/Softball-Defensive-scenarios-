@@ -7,6 +7,24 @@ you were right.
 
 Built for a phone in the dugout: big tap targets, no typing anywhere, one-handed.
 
+## First run
+
+The app opens once with a name and number field. Whatever she enters shows up as the app
+title (*Maggie's Reps*), in the header next to her position (*Second Base · #26*), on her
+dot in the field diagram (a gold **26** badge instead of a plain YOU tag), and in a few of
+the celebration lines (*Locked in, Maggie!*). Both fields are optional — *Skip for now*
+works — and both are editable later under ⚙️ → Who's playing.
+
+It is stored on that device only. Nothing is uploaded, and each phone that opens the link
+gets its own name, number, and progress.
+
+## Sharing it
+
+The 🔗 button opens a share sheet with a QR code of the app's URL, generated on-device as
+an SVG. Hold the phone up in the dugout and teammates point a camera at it. **Share link**
+uses the native share sheet where the browser supports it and falls back to copying, and
+**Copy link** is always there.
+
 ## The loop
 
 1. **Pick a position** — tap a dot on the field or a card from the list. 2B and SS are
@@ -93,7 +111,8 @@ npm run lint
 npm run build     # static output in dist/
 ```
 
-React + Vite, plain CSS, inline SVG. No runtime dependencies beyond React. Progress and
+React + Vite, plain CSS, inline SVG. One runtime dependency beyond React:
+`qrcode-generator` (zero deps of its own) for the share QR. Athlete details, progress, and
 settings persist to `localStorage` and fall back to in-memory state where storage is
 blocked. `dist/` is a static bundle — deploy it anywhere (Vercel, Netlify, GitHub Pages).
 

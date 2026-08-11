@@ -68,6 +68,19 @@ button {
   gap: 10px;
   text-align: left;
   padding: 0;
+  min-width: 0;
+  flex: 1;
+}
+
+.brand > span {
+  min-width: 0;
+}
+
+.brand strong,
+.brand em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .diamond-mark {
@@ -116,6 +129,7 @@ button {
 .topbar-actions {
   display: flex;
   gap: 6px;
+  flex: none;
 }
 
 .icon-btn {
@@ -571,6 +585,20 @@ button {
   paint-order: stroke;
   stroke: #0d1522;
   stroke-width: 2.5;
+}
+
+.fd-you-badge circle {
+  fill: var(--gold);
+  stroke: #0d1522;
+  stroke-width: 1.6;
+}
+
+.fd-you-badge text {
+  font-size: 9px;
+  font-weight: 800;
+  fill: #24170a;
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
 }
 
 .fd-player.is-clickable {
@@ -1041,4 +1069,127 @@ button {
   .job-grid {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* ---------- first run + text fields ---------- */
+.onboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12vh 4px 40px;
+}
+
+.onboard h1 {
+  margin: 18px 0 6px;
+  font-size: 30px;
+  letter-spacing: 0.2px;
+}
+
+.onboard-lead {
+  margin: 0 0 26px;
+  max-width: 320px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-dim);
+}
+
+.onboard .field {
+  width: 100%;
+  max-width: 340px;
+}
+
+.onboard .primary,
+.onboard .ghost {
+  width: 100%;
+  max-width: 340px;
+}
+
+.field {
+  display: block;
+  text-align: left;
+  margin-bottom: 12px;
+}
+
+.field > span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.field input {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.field input::placeholder {
+  color: #5c6f8a;
+  font-weight: 500;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px #ffc73422;
+}
+
+.field-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 104px;
+  gap: 10px;
+}
+
+/* ---------- share ---------- */
+.qr-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 18px 0 14px;
+}
+
+.qr {
+  padding: 12px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px #0006;
+}
+
+.qr svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  shape-rendering: crispEdges;
+}
+
+.share-url {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink-dim);
+  text-align: center;
+  word-break: break-all;
+}
+
+.share-note {
+  margin-top: 16px;
+  text-align: center;
 }

@@ -6,9 +6,10 @@ import { scenariosForPosition } from '../data/scenarios.js';
 import { resolveScenario } from '../lib/coverage.js';
 import { describeAnswer } from '../data/jobs.js';
 import { stableCount } from '../lib/count.js';
+import { jerseyTag } from '../lib/useAthlete.js';
 
 /** The book experience: flip through the pages, no quiz, no score. */
-export default function StudyView({ position, settings, onChangePosition }) {
+export default function StudyView({ position, settings, athlete, onChangePosition }) {
   const pool = useMemo(() => scenariosForPosition(position), [position]);
   const [index, setIndex] = useState(0);
   const [playToken, setPlayToken] = useState(1);
@@ -35,7 +36,13 @@ export default function StudyView({ position, settings, onChangePosition }) {
       <SituationCard scenario={scenario} position={position} count={count} />
 
       <div className="field-wrap">
-        <FieldDiagram scenario={scenario} herPosition={position} revealed playToken={playToken} />
+        <FieldDiagram
+          scenario={scenario}
+          herPosition={position}
+          revealed
+          playToken={playToken}
+          youTag={jerseyTag(athlete)}
+        />
         <button type="button" className="ghost replay" onClick={() => setPlayToken((n) => n + 1)}>
           ↻ Replay
         </button>

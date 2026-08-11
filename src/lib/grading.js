@@ -33,6 +33,12 @@ export const AFFIRMATIONS = [
   'Instincts.',
 ];
 
-export function randomAffirmation() {
-  return AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)];
+// A few of the affirmations use her name when we have one — enough to feel like
+// a coach talking to her, not so often that it wears out.
+const BY_NAME = ["Locked in, {name}!", "That's the play, {name}.", 'Yes, {name}!', 'Big time, {name}.'];
+
+export function randomAffirmation(name) {
+  const pool = name ? [...AFFIRMATIONS, ...BY_NAME] : AFFIRMATIONS;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  return pick.replace('{name}', name || '');
 }

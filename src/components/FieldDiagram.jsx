@@ -89,6 +89,7 @@ export default function FieldDiagram({
   playToken = 0,
   onSelectPosition = null,
   runners,
+  youTag = 'YOU',
 }) {
   const [t, setT] = useState(1);
   const frame = useRef(0);
@@ -201,12 +202,23 @@ export default function FieldDiagram({
             <text x={at.x} y={at.y + 3.5} className="fd-dot-label">
               {key}
             </text>
-            {isYou && (
-              // Tag sits under her dot, or above it near the bottom edge of the field.
-              <text x={at.x} y={at.y > 300 ? at.y - 18 : at.y + 22} className="fd-you-tag">
-                YOU
-              </text>
-            )}
+            {isYou &&
+              (youTag.startsWith('#') ? (
+                // Jersey number rides on her dot as a badge — small enough that it
+                // never lands on a runner or a teammate.
+                <g className="fd-you-badge">
+                  <circle cx={at.x + 13} cy={at.y - 13} r={8.5} />
+                  <text x={at.x + 13} y={at.y - 10}>
+                    {youTag.slice(1)}
+                  </text>
+                </g>
+              ) : (
+                // No number on file: fall back to a tag under her dot (above it
+                // down by the plate, where the field runs out).
+                <text x={at.x} y={at.y > 300 ? at.y - 18 : at.y + 22} className="fd-you-tag">
+                  {youTag}
+                </text>
+              ))}
           </g>
         );
       })}

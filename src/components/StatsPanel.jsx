@@ -1,13 +1,14 @@
 import { POSITION_ORDER, POSITIONS } from '../data/field.js';
+import { possessive } from '../lib/useAthlete.js';
 
-export default function StatsPanel({ stats, onClose }) {
+export default function StatsPanel({ stats, athlete, onClose }) {
   const tracked = POSITION_ORDER.filter((key) => stats.byPosition[key]?.attempts);
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-head">
-          <h2>Your reps</h2>
+          <h2>{athlete?.name ? `${possessive(athlete.name)} reps` : 'Your reps'}</h2>
           <button type="button" className="ghost" onClick={onClose}>
             Done
           </button>

@@ -1,4 +1,4 @@
-import { POSITIONS, POSITION_ORDER, resolveSpot, HOME } from '../data/field.js';
+import { POSITIONS, POSITION_ORDER, resolveSpot, HOME, dist } from '../data/field.js';
 
 // Timeline slices, all in 0..1 of the animation. The ball goes first, the
 // defense reacts, then the throws fire in order — same reading order as a
@@ -15,6 +15,51 @@ export const DURATION_MS = 3200;
 // Pre-reveal, only the batted ball animates — just enough to show the play she
 // is reading without giving away anyone's job.
 export const BALL_ONLY_MS = 900;
+
+// Two players can legitimately end up on the same square foot — a third baseman
+// fielding beside the bag the shortstop is covering — but two dots on top of
+// each other is an unreadable diagram. Nudge them apart, holding still whoever
+// is on the ball or never moved in the first place.
+const MIN_SEP = 21;
+
+function separate(movers, ball) {
+  const fixed = new Set(
+    movers.filter((m) => !m.moves || (ball && dist(m.to, ball.to) < 3)).map((m) => m.key),
+  );
+
+  for (let pass = 0; pass < 4; pass++) {
+    for (let i = 0; i < movers.length; i++) {
+      for (let j = i + 1; j < movers.length; j++) {
+        const a = movers[i];
+        const b = movers[j];
+        const aFixed = fixed.has(a.key);
+        const bFixed = fixed.has(b.key);
+        if (aFixed && bFixed) continue;
+
+        let dx = b.to.x - a.to.x;
+        let dy = b.to.y - a.to.y;
+        let d = Math.hypot(dx, dy);
+        if (d >= MIN_SEP) continue;
+        if (d < 0.01) {
+          dx = 1;
+          dy = 0;
+          d = 1;
+        }
+        const ux = dx / d;
+        const uy = dy / d;
+        const push = (MIN_SEP - d) / 2 + 0.5;
+        if (aFixed) {
+          b.to = { x: b.to.x + ux * push * 2, y: b.to.y + uy * push * 2 };
+        } else if (bFixed) {
+          a.to = { x: a.to.x - ux * push * 2, y: a.to.y - uy * push * 2 };
+        } else {
+          a.to = { x: a.to.x - ux * push, y: a.to.y - uy * push };
+          b.to = { x: b.to.x + ux * push, y: b.to.y + uy * push };
+        }
+      }
+    }
+  }
+}
 
 /**
  * Turn a scenario's responsibilities into everything the field diagram needs:
@@ -45,6 +90,8 @@ export function buildPlayPlan(scenario, herPosition) {
       hasJob: Boolean(job),
     };
   });
+
+  separate(movers, ball);
 
   const throws = [];
   for (const key of POSITION_ORDER) {

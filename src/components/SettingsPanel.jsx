@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { SETTING_OPTIONS } from '../lib/coverage.js';
+import { cleanName, cleanNumber, NAME_MAX } from '../lib/useAthlete.js';
 
 function Group({ title, blurb, name, value, onChange }) {
   return (
@@ -23,16 +25,62 @@ function Group({ title, blurb, name, value, onChange }) {
   );
 }
 
-export default function SettingsPanel({ settings, onChange, onClose, onResetStats }) {
+export default function SettingsPanel({ settings, athlete, onSaveAthlete, onChange, onClose, onResetStats }) {
+  const [name, setName] = useState(athlete?.name || '');
+  const [number, setNumber] = useState(athlete?.number || '');
+
+  // Keep the stored athlete in step with the fields as she types.
+  const editName = (value) => {
+    const next = cleanName(value);
+    setName(next);
+    onSaveAthlete({ name: next, number });
+  };
+  const editNumber = (value) => {
+    const next = cleanNumber(value);
+    setNumber(next);
+    onSaveAthlete({ name, number: next });
+  };
+
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-head">
-          <h2>Team coverage</h2>
+          <h2>Settings</h2>
           <button type="button" className="ghost" onClick={onClose}>
             Done
           </button>
         </div>
+
+        <div className="setting-group">
+          <h3>Who's playing</h3>
+          <p className="setting-blurb">Saved on this device only.</p>
+          <div className="field-row">
+            <label className="field">
+              <span>Name</span>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => editName(e.target.value)}
+                placeholder="First name"
+                maxLength={NAME_MAX}
+                autoCapitalize="words"
+              />
+            </label>
+            <label className="field">
+              <span>Number</span>
+              <input
+                type="text"
+                value={number}
+                onChange={(e) => editNumber(e.target.value)}
+                placeholder="00"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                className="field-number"
+              />
+            </label>
+          </div>
+        </div>
+
         <p className="sheet-lead">
           Coverage systems vary. Match these to what your team actually plays and every answer in the app follows.
         </p>
