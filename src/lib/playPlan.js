@@ -12,6 +12,10 @@ export const PHASES = {
 
 export const DURATION_MS = 3200;
 
+// Pre-reveal, only the batted ball animates — just enough to show the play she
+// is reading without giving away anyone's job.
+export const BALL_ONLY_MS = 900;
+
 /**
  * Turn a scenario's responsibilities into everything the field diagram needs:
  * the batted ball path, every fielder's movement line, and the throws.
@@ -19,9 +23,13 @@ export const DURATION_MS = 3200;
 export function buildPlayPlan(scenario, herPosition) {
   const resp = scenario.responsibilities;
 
+  // A steal has no batted ball — what moves before the defense reacts is the
+  // runner, so the diagram shows her jump instead of a ball off the bat.
+  const isPitch = scenario.ball?.type === 'steal';
   const ballTo = scenario.ball?.spot ? resolveSpot(scenario.ball.spot) : null;
-  const ball = ballTo
-    ? { from: { ...HOME }, to: ballTo, type: scenario.ball.type }
+  const ball = ballTo && !isPitch ? { from: { ...HOME }, to: ballTo, type: scenario.ball.type } : null;
+  const advance = scenario.ball?.advance
+    ? { from: resolveSpot(scenario.ball.advance.from), to: resolveSpot(scenario.ball.advance.to) }
     : null;
 
   const movers = POSITION_ORDER.map((key) => {
@@ -53,7 +61,7 @@ export function buildPlayPlan(scenario, herPosition) {
   }
   throws.sort((a, b) => a.order - b.order);
 
-  return { ball, movers, throws };
+  return { ball, advance, movers, throws };
 }
 
 /** Progress of one phase at time t, clamped to 0..1. */

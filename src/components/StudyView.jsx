@@ -5,6 +5,7 @@ import AssignmentList from './AssignmentList.jsx';
 import { scenariosForPosition } from '../data/scenarios.js';
 import { resolveScenario } from '../lib/coverage.js';
 import { describeAnswer } from '../data/jobs.js';
+import { stableCount } from '../lib/count.js';
 
 /** The book experience: flip through the pages, no quiz, no score. */
 export default function StudyView({ position, settings, onChangePosition }) {
@@ -14,6 +15,7 @@ export default function StudyView({ position, settings, onChangePosition }) {
   const [showAll, setShowAll] = useState(true);
 
   const scenario = resolveScenario(pool[index], settings);
+  const count = stableCount(scenario);
   const answer = scenario.responsibilities[position];
 
   const go = (delta) => {
@@ -30,7 +32,7 @@ export default function StudyView({ position, settings, onChangePosition }) {
         <span className="score-item">Study mode — no scoring</span>
       </div>
 
-      <SituationCard scenario={scenario} position={position} />
+      <SituationCard scenario={scenario} position={position} count={count} />
 
       <div className="field-wrap">
         <FieldDiagram scenario={scenario} herPosition={position} revealed playToken={playToken} />

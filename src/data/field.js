@@ -51,13 +51,13 @@ export const SPOTS = {
   'bunt-1B-line': { x: 238, y: 302 },
   'pop-1B-foul': { x: 302, y: 292 },
   'pop-SS-3B': { x: 142, y: 224 },
-  'LF-CF gap': { x: 138, y: 62 },
-  'RF-CF gap': { x: 262, y: 62 },
+  'LF-CF gap': { x: 146, y: 88 },
+  'RF-CF gap': { x: 254, y: 88 },
   'shallow RCF': { x: 258, y: 152 },
-  'deep LF': { x: 72, y: 70 },
+  'deep LF': { x: 95, y: 105 },
   'single-LF': { x: 108, y: 138 },
   'single-RF': { x: 292, y: 138 },
-  'medium-LF': { x: 100, y: 124 },
+  'medium-LF': { x: 112, y: 140 },
 
   // spots fielders back up to
   'backup-1B': { x: 312, y: 300 },

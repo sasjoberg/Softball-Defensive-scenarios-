@@ -2,7 +2,7 @@
 // target has one, every spot reference resolves, and every position has reps.
 import { SCENARIOS, scenariosForPosition } from '../src/data/scenarios.js';
 import { JOB_BY_ID, TARGETS } from '../src/data/jobs.js';
-import { POSITION_ORDER, resolveSpot } from '../src/data/field.js';
+import { POSITION_ORDER, resolveSpot, HOME, FENCE_R } from '../src/data/field.js';
 import { resolveScenario } from '../src/lib/coverage.js';
 import { buildPlayPlan } from '../src/lib/playPlan.js';
 
@@ -21,6 +21,19 @@ for (const scenario of SCENARIOS) {
   check(Array.isArray(scenario.runners), `${at}: runners must be an array`);
   check(typeof scenario.prompt === 'string' && scenario.prompt.length > 10, `${at}: missing prompt`);
   check(Boolean(scenario.ball?.spot), `${at}: missing ball spot`);
+  if (scenario.count) {
+    check(scenario.count.balls >= 0 && scenario.count.balls <= 3, `${at}: bad ball count`);
+    check(scenario.count.strikes >= 0 && scenario.count.strikes <= 2, `${at}: bad strike count`);
+  }
+  if (scenario.ball?.advance) {
+    for (const ref of [scenario.ball.advance.from, scenario.ball.advance.to]) {
+      try {
+        resolveSpot(ref);
+      } catch (e) {
+        errors.push(`${at}: advance — ${e.message}`);
+      }
+    }
+  }
   try {
     resolveSpot(scenario.ball.spot);
   } catch (e) {
@@ -65,6 +78,15 @@ for (const scenario of SCENARIOS) {
       }
     }
   }
+}
+
+// Batted balls have to land in the park — a spot beyond the fence arc reads as
+// a home run on the diagram no matter what the prompt says.
+for (const scenario of SCENARIOS) {
+  if (scenario.ball.type === 'steal') continue;
+  const spot = resolveSpot(scenario.ball.spot);
+  const fromHome = Math.hypot(spot.x - HOME.x, spot.y - HOME.y);
+  check(fromHome < FENCE_R - 8, `${scenario.id}: ball lands ${Math.round(fromHome)} from home, past the fence at ${FENCE_R}`);
 }
 
 // Steal + relay scenarios must define both middle infielders so a swap is total.

@@ -11,7 +11,9 @@ Built for a phone in the dugout: big tap targets, no typing anywhere, one-handed
 
 1. **Pick a position** — tap a dot on the field or a card from the list. 2B and SS are
    highlighted as "your spots," but all nine are playable.
-2. **Read the situation** — outs, runners, and the batted ball in one sentence.
+2. **Read the situation** — a broadcast-style readout across the top (lit bases, outs,
+   and the count), the situation in one sentence, and the ball flying out to where it was
+   hit so you can see the play you're reading before you answer.
 3. **Press your job** — one of eight job buttons, plus a target row when the job needs one
    ("field it → throw to 2nd", "cutoff/relay → home", "back up 1st").
 4. **Get graded** — gold star, a rotating affirmation, and a streak tick for a hit. A miss
@@ -71,11 +73,15 @@ Adding more is just another object in the same shape:
   `{ between: ['LF-CF gap', 'home'], t: 0.3 }` for a cutoff lining itself up between the
   ball and a base.
 - `throw.order` 1 fires first, 2 after it — that's how a relay reads on the diagram.
+- `count: { balls, strikes }` is optional; scenarios without one get a random count per rep
+  (a stable one in study mode). Set it where the count is part of the situation.
+- Steals set `ball.type: 'steal'` and `ball.advance: { from, to }` — the diagram shows the
+  runner's jump instead of a batted ball.
 - Tag a scenario `['relay']` or `['steal']` to make it follow the coverage settings.
 
 Run `npm run validate` after editing: it checks every job id, target, and spot reference,
-verifies each position still has reps, and builds the play plan under all eight settings
-combinations.
+verifies each batted ball lands inside the fence, confirms each position still has reps,
+and builds the play plan under all eight settings combinations.
 
 ## Develop
 

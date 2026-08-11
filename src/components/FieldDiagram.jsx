@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { VIEW, HOME, BASES, POLES, FENCE_R, POSITIONS, POSITION_ORDER, lerp } from '../data/field.js';
-import { buildPlayPlan, phaseProgress, ease, PHASES, DURATION_MS } from '../lib/playPlan.js';
+import { buildPlayPlan, phaseProgress, ease, PHASES, DURATION_MS, BALL_ONLY_MS } from '../lib/playPlan.js';
 
 const RUNNER_OFFSET = {
-  '1B': { x: 16, y: 13 },
-  '2B': { x: -19, y: -13 },
-  '3B': { x: -16, y: 13 },
+  '1B': { x: 19, y: 15 },
+  '2B': { x: 0, y: -21 },
+  '3B': { x: -19, y: 15 },
 };
 
 function FieldBackground({ runners = [] }) {
@@ -37,7 +37,15 @@ function FieldBackground({ runners = [] }) {
             className="fd-base"
           />
         ) : (
-          <rect key={key} x={b.x - 6} y={b.y - 6} width="12" height="12" className="fd-base" transform={`rotate(45 ${b.x} ${b.y})`} />
+          <rect
+            key={key}
+            x={b.x - 6}
+            y={b.y - 6}
+            width="12"
+            height="12"
+            className={`fd-base${runners.includes(key) ? ' is-occupied' : ''}`}
+            transform={`rotate(45 ${b.x} ${b.y})`}
+          />
         ),
       )}
       {runners.map((base) => {
@@ -46,9 +54,10 @@ function FieldBackground({ runners = [] }) {
         const x = BASES[base].x + off.x;
         const y = BASES[base].y + off.y;
         return (
-          <g key={base}>
-            <circle cx={x} cy={y} r={6.5} className="fd-runner" />
-            <text x={x} y={y + 2.6} className="fd-runner-label">
+          <g key={base} className="fd-runner-group">
+            <circle cx={x} cy={y} r={13} className="fd-runner-halo" />
+            <circle cx={x} cy={y} r={9} className="fd-runner" />
+            <text x={x} y={y + 3.2} className="fd-runner-label">
               R
             </text>
           </g>
@@ -81,19 +90,22 @@ export default function FieldDiagram({
   onSelectPosition = null,
   runners,
 }) {
-  const [t, setT] = useState(revealed ? 0 : 1);
+  const [t, setT] = useState(1);
   const frame = useRef(0);
 
   const plan = scenario ? buildPlayPlan(scenario, herPosition) : null;
 
   useEffect(() => {
-    if (!revealed || !plan) {
+    if (!plan) {
       setT(1);
       return undefined;
     }
+    // Before the reveal the diagram still shows the situation: the ball flies
+    // out to where it was hit so she can see the play she is reading.
+    const duration = revealed ? DURATION_MS : BALL_ONLY_MS;
     const started = performance.now();
     const step = (now) => {
-      const p = Math.min(1, (now - started) / DURATION_MS);
+      const p = Math.min(1, (now - started) / duration);
       setT(p);
       if (p < 1) frame.current = requestAnimationFrame(step);
     };
@@ -104,7 +116,7 @@ export default function FieldDiagram({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [revealed, playToken, scenario?.id, herPosition]);
 
-  const ballP = ease(phaseProgress(t, PHASES.ball));
+  const ballP = ease(revealed ? phaseProgress(t, PHASES.ball) : t);
   const moveP = ease(phaseProgress(t, PHASES.move));
   const throwP = [phaseProgress(t, PHASES.throw1), phaseProgress(t, PHASES.throw2)];
 
@@ -112,7 +124,11 @@ export default function FieldDiagram({
     <svg className="field" viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} role="img" aria-label="Field diagram">
       <FieldBackground runners={runners ?? scenario?.runners ?? []} />
 
-      {revealed && plan?.ball && (
+      {plan?.advance && (
+        <Arrow from={plan.advance.from} to={plan.advance.to} progress={ballP} className="fd-advance" dashed />
+      )}
+
+      {plan?.ball && (
         <g className="fd-ball-path">
           <line
             x1={plan.ball.from.x}
@@ -120,14 +136,13 @@ export default function FieldDiagram({
             x2={lerp(plan.ball.from, plan.ball.to, ballP).x}
             y2={lerp(plan.ball.from, plan.ball.to, ballP).y}
           />
-          {ballP > 0 && (
-            <circle
-              cx={lerp(plan.ball.from, plan.ball.to, ballP).x}
-              cy={lerp(plan.ball.from, plan.ball.to, ballP).y}
-              r={5}
-              className="fd-ball"
-            />
-          )}
+          <circle
+            cx={lerp(plan.ball.from, plan.ball.to, ballP).x}
+            cy={lerp(plan.ball.from, plan.ball.to, ballP).y}
+            r={6}
+            className="fd-ball"
+          />
+          {ballP >= 1 && <circle cx={plan.ball.to.x} cy={plan.ball.to.y} r={12} className="fd-ball-spot" />}
         </g>
       )}
 
@@ -187,7 +202,8 @@ export default function FieldDiagram({
               {key}
             </text>
             {isYou && (
-              <text x={at.x} y={at.y - 19} className="fd-you-tag">
+              // Tag sits under her dot, or above it near the bottom edge of the field.
+              <text x={at.x} y={at.y > 300 ? at.y - 18 : at.y + 22} className="fd-you-tag">
                 YOU
               </text>
             )}

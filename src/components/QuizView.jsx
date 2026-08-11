@@ -7,6 +7,7 @@ import { scenariosForPosition } from '../data/scenarios.js';
 import { resolveScenario } from '../lib/coverage.js';
 import { describeAnswer } from '../data/jobs.js';
 import { isCorrect, randomAffirmation } from '../lib/grading.js';
+import { drawCount } from '../lib/count.js';
 
 function drawScenario(pool, avoidId) {
   const options = pool.length > 1 ? pool.filter((s) => s.id !== avoidId) : pool;
@@ -24,6 +25,7 @@ export default function QuizView({ position, settings, stats, onRecord, onChange
   const [showAll, setShowAll] = useState(false);
 
   const scenario = useMemo(() => resolveScenario(raw, settings), [raw, settings]);
+  const count = useMemo(() => drawCount(raw), [raw]);
   const answer = scenario.responsibilities[position];
 
   const nextRep = useCallback(() => {
@@ -76,7 +78,7 @@ export default function QuizView({ position, settings, stats, onRecord, onChange
         </span>
       </div>
 
-      <SituationCard scenario={scenario} position={position} />
+      <SituationCard scenario={scenario} position={position} count={count} />
 
       <div className="field-wrap">
         <FieldDiagram

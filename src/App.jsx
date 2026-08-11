@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import DiamondMark from './components/DiamondMark.jsx';
 import PositionPicker from './components/PositionPicker.jsx';
 import QuizView from './components/QuizView.jsx';
 import StudyView from './components/StudyView.jsx';
@@ -22,7 +23,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <button type="button" className="brand" onClick={() => setPosition(null)}>
-          <span className="brand-mark">⚾</span>
+          <DiamondMark />
           <span>
             <strong>Mental Reps</strong>
             <em>{position ? POSITIONS[position].name : 'Know your job before the pitch'}</em>

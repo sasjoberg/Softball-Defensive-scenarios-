@@ -198,7 +198,8 @@ export const SCENARIOS = [
     outs: 1,
     runners: ['1B'],
     batterHand: 'R',
-    ball: { type: 'steal', location: 'straight steal of 2nd', spot: '2B' },
+    count: { balls: 1, strikes: 1 },
+    ball: { type: 'steal', location: 'straight steal of 2nd', spot: '2B', advance: { from: '1B', to: '2B' } },
     prompt: 'One out. Runner on 1st, right-handed batter. She takes off on the pitch — straight steal, batter takes it.',
     tags: ['steal'],
     responsibilities: {
@@ -225,7 +226,8 @@ export const SCENARIOS = [
     outs: 0,
     runners: ['1B'],
     batterHand: 'L',
-    ball: { type: 'steal', location: 'straight steal of 2nd', spot: '2B' },
+    count: { balls: 2, strikes: 0 },
+    ball: { type: 'steal', location: 'straight steal of 2nd', spot: '2B', advance: { from: '1B', to: '2B' } },
     prompt: 'No outs. Runner on 1st, left-handed batter at the plate. Runner goes on the pitch.',
     tags: ['steal'],
     responsibilities: {
