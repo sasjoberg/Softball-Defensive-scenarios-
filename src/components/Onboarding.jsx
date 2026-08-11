@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import DiamondMark from './DiamondMark.jsx';
+import AppMark from './AppMark.jsx';
 import PositionChips from './PositionChips.jsx';
 import { cleanName, cleanNumber, NAME_MAX } from '../lib/useAthlete.js';
 
@@ -11,7 +11,7 @@ export default function Onboarding({ onDone }) {
 
   return (
     <div className="onboard">
-      <DiamondMark size={72} />
+      <AppMark size={72} />
       <h1>Mental Reps</h1>
       <p className="onboard-lead">
         Situational defense, one rep at a time. Tell us who's taking them — it stays on this

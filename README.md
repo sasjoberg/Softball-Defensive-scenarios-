@@ -104,12 +104,27 @@ Run `npm run validate` after editing: it checks every job id, target, and spot r
 verifies each batted ball lands inside the fence, confirms each position still has reps,
 and builds the play plan under all eight settings combinations.
 
+## Icons
+
+`public/icon.svg` is the only piece of icon artwork — a fielder's glove. Everything else is
+generated from it:
+
+```bash
+npm run icons   # → favicon-32, apple-touch-icon (180), icon-192, icon-512, icon-maskable-512
+```
+
+Edit the SVG, re-run that, and commit the PNGs. The PNGs matter: an SVG favicon alone
+covers the browser tab, but iOS home screens need `apple-touch-icon.png` and Android reads
+`manifest.webmanifest` — without those, a bookmark falls back to a generated letter tile.
+The maskable variant carries extra padding so Android's circle crop doesn't clip the glove.
+
 ## Develop
 
 ```bash
 npm install
 npm run dev       # http://localhost:5173
 npm run validate  # check the scenario bank
+npm run icons     # regenerate app icons from public/icon.svg
 npm run lint
 npm run build     # static output in dist/
 ```

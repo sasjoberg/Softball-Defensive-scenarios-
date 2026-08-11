@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import DiamondMark from './components/DiamondMark.jsx';
+import AppMark from './components/AppMark.jsx';
 import Onboarding from './components/Onboarding.jsx';
 import PositionPicker from './components/PositionPicker.jsx';
 import QuizView from './components/QuizView.jsx';
@@ -40,7 +40,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <button type="button" className="brand" onClick={() => setPosition(null)}>
-          <DiamondMark />
+          <AppMark />
           <span>
             <strong>{title}</strong>
             <em>{subtitle}</em>

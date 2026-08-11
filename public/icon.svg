@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0d1522" />
+  <g transform="rotate(-8 33 38)">
+    <!-- thumb, angled away from the hand so the web notch opens up -->
+    <rect x="-5" y="-11.5" width="10" height="23" rx="5" transform="translate(15 35) rotate(-32)" fill="#b8783c" />
+
+    <!-- laced web bridging thumb and index finger -->
+    <path fill="#a2652d" d="M13.4 28.6 C15.4 25.4 17.4 24.2 19.8 24.4 L19.8 38 C16.8 37.4 14.8 34 13.4 28.6 Z" />
+    <g stroke="#f5d98a" stroke-width="1.15" stroke-linecap="round" fill="none">
+      <path d="M14.6 27 L19.4 26.4" />
+      <path d="M15.4 31 L19.6 30.6" />
+      <path d="M16.6 34.8 L19.6 34.6" />
+      <path d="M16.2 25.4 L17.4 36.4" />
+    </g>
+
+    <!-- hand: four finger stalls over the palm -->
+    <path
+      fill="#c9884a"
+      d="M19 34 C19 28 19.5 26 20 25
+         a4 4 0 0 1 8 0
+         a4 4 0 0 1 8 0
+         a4 4 0 0 1 8 0
+         a4 4 0 0 1 8 0
+         C52.5 26 53 29 53 33
+         C53 44.5 46 52.5 35 53.5
+         C24 54.5 19 45 19 36 Z"
+    />
+
+    <!-- finger seams -->
+    <g stroke="#94592a" stroke-width="1.5" stroke-linecap="round">
+      <path d="M28 26 V37" />
+      <path d="M36 25.6 V38" />
+      <path d="M44 26 V37" />
+    </g>
+
+    <!-- lacing around the finger tips -->
+    <path
+      fill="none"
+      stroke="#f5d98a"
+      stroke-width="1.2"
+      stroke-linecap="round"
+      stroke-dasharray="1.6 3"
+      d="M21.4 25.6 a3.5 3.5 0 0 1 7 0 a3.5 3.5 0 0 1 7 0 a3.5 3.5 0 0 1 7 0 a3.5 3.5 0 0 1 7 0"
+    />
+
+    <!-- pocket -->
+    <ellipse cx="36" cy="45.5" rx="9.5" ry="5.5" fill="#b8783c" transform="rotate(-6 36 45.5)" />
+  </g>
+</svg>
