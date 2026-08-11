@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SETTING_OPTIONS } from '../lib/coverage.js';
 import PositionChips from './PositionChips.jsx';
+import TeamColorPicker from './TeamColorPicker.jsx';
 import { cleanName, cleanNumber, NAME_MAX } from '../lib/useAthlete.js';
 
 function Group({ title, blurb, name, value, onChange }) {
@@ -30,19 +31,21 @@ export default function SettingsPanel({ settings, athlete, onSaveAthlete, onChan
   const [name, setName] = useState(athlete?.name || '');
   const [number, setNumber] = useState(athlete?.number || '');
   const positions = athlete?.positions ?? [];
+  const color = athlete?.color;
 
   // Keep the stored athlete in step with the fields as she types.
   const editName = (value) => {
     const next = cleanName(value);
     setName(next);
-    onSaveAthlete({ name: next, number, positions });
+    onSaveAthlete({ name: next, number, positions, color });
   };
   const editNumber = (value) => {
     const next = cleanNumber(value);
     setNumber(next);
-    onSaveAthlete({ name, number: next, positions });
+    onSaveAthlete({ name, number: next, positions, color });
   };
-  const editPositions = (next) => onSaveAthlete({ name, number, positions: next });
+  const editPositions = (next) => onSaveAthlete({ name, number, positions: next, color });
+  const editColor = (next) => onSaveAthlete({ name, number, positions, color: next });
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -81,6 +84,10 @@ export default function SettingsPanel({ settings, athlete, onSaveAthlete, onChan
                 className="field-number"
               />
             </label>
+          </div>
+          <div className="field">
+            <span>Team colours</span>
+            <TeamColorPicker selected={color} onPick={editColor} />
           </div>
           <div className="field">
             <span>Your spots</span>

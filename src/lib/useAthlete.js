@@ -1,8 +1,15 @@
 import { usePersistentState } from './storage.js';
+import { DEFAULT_COLOR } from '../data/teamColors.js';
 
 // Who is holding the phone. Stored on this device only — a teammate who opens
 // the shared link gets her own first-run screen and her own progress.
-export const EMPTY_ATHLETE = { name: '', number: '', positions: [], onboarded: false };
+export const EMPTY_ATHLETE = {
+  name: '',
+  number: '',
+  positions: [],
+  color: DEFAULT_COLOR,
+  onboarded: false,
+};
 
 export const NAME_MAX = 20;
 export const NUMBER_MAX = 3;
@@ -23,6 +30,7 @@ export function useAthlete() {
       name: cleanName(next.name || '').trim(),
       number: cleanNumber(next.number || ''),
       positions: Array.isArray(next.positions) ? next.positions : [],
+      color: next.color || DEFAULT_COLOR,
       onboarded: true,
     });
 

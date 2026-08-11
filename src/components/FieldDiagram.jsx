@@ -2,6 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { VIEW, HOME, BASES, POLES, FENCE_R, POSITIONS, POSITION_ORDER, lerp } from '../data/field.js';
 import { buildPlayPlan, phaseProgress, ease, PHASES, DURATION_MS, BALL_ONLY_MS } from '../lib/playPlan.js';
 
+// Skinned-infield radii, in view units (the 60ft base path is ~88 units). The
+// skin has to clear second base and the middle infielders' depth; foul ground
+// near the plate is dirt too, out past the backup spots.
+const SKIN_R = 152;
+const FOUL_SKIN_R = 176;
+
 const RUNNER_OFFSET = {
   '1B': { x: 19, y: 15 },
   '2B': { x: 0, y: -21 },
@@ -17,18 +23,25 @@ function FieldBackground({ runners = [] }) {
         <path d={fair} />
       </clipPath>
       {/* foul-ground dirt sits under the grass wedge so only the corners show */}
-      <path d={`M ${HOME.x - 150} ${HOME.y} a 150 150 0 0 1 300 0 Z`} className="fd-dirt-foul" />
+      <path
+        d={`M ${HOME.x - FOUL_SKIN_R} ${HOME.y} a ${FOUL_SKIN_R} ${FOUL_SKIN_R} 0 0 1 ${FOUL_SKIN_R * 2} 0 Z`}
+        className="fd-dirt-foul"
+      />
       <path d={fair} className="fd-grass" />
       {/* clipped so the dirt stops at the foul lines instead of flooding foul ground */}
-      <path d={`M ${HOME.x - 132} ${HOME.y} a 132 132 0 0 1 264 0 Z`} className="fd-dirt" clipPath="url(#fd-fair)" />
-      <polygon points={infield} className="fd-infield" />
+      <path
+        d={`M ${HOME.x - SKIN_R} ${HOME.y} a ${SKIN_R} ${SKIN_R} 0 0 1 ${SKIN_R * 2} 0 Z`}
+        className="fd-dirt"
+        clipPath="url(#fd-fair)"
+      />
+      <polygon points={infield} className="fd-baselines" />
       <line x1={HOME.x} y1={HOME.y} x2={POLES.left.x} y2={POLES.left.y} className="fd-line" />
       <line x1={HOME.x} y1={HOME.y} x2={POLES.right.x} y2={POLES.right.y} className="fd-line" />
       <path
         d={`M ${POLES.left.x} ${POLES.left.y} A ${FENCE_R} ${FENCE_R} 0 0 1 ${POLES.right.x} ${POLES.right.y}`}
         className="fd-fence"
       />
-      <circle cx={HOME.x} cy={HOME.y - 62} r={9} className="fd-mound" />
+      <circle cx={HOME.x} cy={HOME.y - 62} r={12} className="fd-circle" />
       {Object.entries(BASES).map(([key, b]) =>
         key === 'home' ? (
           <polygon
@@ -121,6 +134,7 @@ export default function FieldDiagram({
   const ballP = ease(revealed ? phaseProgress(t, PHASES.ball) : t);
   const moveP = ease(phaseProgress(t, PHASES.move));
   const throwP = [phaseProgress(t, PHASES.throw1), phaseProgress(t, PHASES.throw2)];
+  const jersey = youTag.startsWith('#') ? youTag.slice(1) : null;
 
   return (
     <svg className="field" viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} role="img" aria-label="Field diagram">
@@ -199,28 +213,19 @@ export default function FieldDiagram({
             tabIndex={clickable ? 0 : undefined}
             aria-label={clickable ? `Play ${POSITIONS[key].name}` : undefined}
           >
-            {isYou && <circle cx={at.x} cy={at.y} r={16} className="fd-you-glow" />}
-            <circle cx={at.x} cy={at.y} r={11} className="fd-dot" />
+            {isYou && <circle cx={at.x} cy={at.y} r={17} className="fd-you-glow" />}
+            <circle cx={at.x} cy={at.y} r={isYou && jersey ? 12.5 : 11} className="fd-dot" />
+            {/* her dot carries her number; everyone else carries their position */}
             <text x={at.x} y={at.y + 3.5} className="fd-dot-label">
-              {key}
+              {isYou && jersey ? jersey : key}
             </text>
-            {isYou &&
-              (youTag.startsWith('#') ? (
-                // Jersey number rides on her dot as a badge — small enough that it
-                // never lands on a runner or a teammate.
-                <g className="fd-you-badge">
-                  <circle cx={at.x + 13} cy={at.y - 13} r={8.5} />
-                  <text x={at.x + 13} y={at.y - 10}>
-                    {youTag.slice(1)}
-                  </text>
-                </g>
-              ) : (
-                // No number on file: fall back to a tag under her dot (above it
-                // down by the plate, where the field runs out).
-                <text x={at.x} y={at.y > 300 ? at.y - 18 : at.y + 22} className="fd-you-tag">
-                  {youTag}
-                </text>
-              ))}
+            {isYou && !jersey && (
+              // No number on file: tag her dot instead (above it down by the
+              // plate, where the field runs out).
+              <text x={at.x} y={at.y > 300 ? at.y - 18 : at.y + 22} className="fd-you-tag">
+                YOU
+              </text>
+            )}
           </g>
         );
       })}

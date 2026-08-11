@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppMark from './components/AppMark.jsx';
 import Onboarding from './components/Onboarding.jsx';
 import PositionPicker from './components/PositionPicker.jsx';
@@ -11,6 +11,7 @@ import { usePersistentState } from './lib/storage.js';
 import { useProgress } from './lib/useProgress.js';
 import { useAthlete, possessive } from './lib/useAthlete.js';
 import { DEFAULT_SETTINGS } from './lib/coverage.js';
+import { colorById } from './data/teamColors.js';
 import { POSITIONS } from './data/field.js';
 
 export default function App() {
@@ -22,6 +23,15 @@ export default function App() {
   const { athlete, save } = useAthlete();
 
   const changeSetting = (name, value) => setSettings((prev) => ({ ...prev, [name]: value }));
+
+  // Team colour lives on the root element so sheets and overlays inherit it too.
+  const team = colorById(athlete.color);
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--accent', team.accent);
+    root.style.setProperty('--accent-deep', team.deep);
+    root.style.setProperty('--on-accent', team.ink);
+  }, [team]);
 
   if (!athlete.onboarded) {
     return (

@@ -18,6 +18,11 @@ picker — on the field diagram and the list — with copy that keeps the other 
 open. All three fields are optional — *Skip for now* works, and nothing is flagged if she
 skips — and all three are editable later under ⚙️ → Who's playing.
 
+It also takes the team's colours — eight presets, previewed live as she taps them — which
+retint the whole app: buttons, streak numbers, the gold star, her flagged spots, and her dot
+on the field. Every preset is checked for contrast against the dark background and for the
+text that sits on top of it (`src/data/teamColors.js`).
+
 It is stored on that device only. Nothing is uploaded, and each phone that opens the link
 gets its own name, number, and progress.
 
@@ -41,8 +46,10 @@ uses the native share sheet where the browser supports it and falls back to copy
    gets "Not quite, try again" and a second look; after that (or on *Show me the play*) the
    answer and the one-line *why* are revealed.
 5. **Watch the play** — the batted ball, every fielder's movement, and every throw animate
-   on the top-down field, with your position glowing gold and tagged YOU. *See the whole
-   defense* lists all nine assignments, like the facing page in the book.
+   on the top-down softball field: fully skinned infield, pitching circle, chalked base
+   paths. Your dot carries your jersey number in the team colour (or a YOU tag if you did
+   not give one). *See the whole defense* lists all nine assignments, like the facing page
+   in the book.
 
 ## Two modes
 

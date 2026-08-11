@@ -6,8 +6,10 @@
   --card: #172336;
   --card-2: #1e2d44;
   --line: #2a3b56;
-  --gold: #ffc734;
-  --gold-deep: #f2a007;
+  /* team accent — overridden per team at runtime (see data/teamColors.js) */
+  --accent: #ffc734;
+  --accent-deep: #f2a007;
+  --on-accent: var(--on-accent);
   --green: #2f8f5b;
   --green-deep: #206a42;
   --dirt: #b5793f;
@@ -150,8 +152,8 @@ button {
 }
 
 .mode-toggle button.is-active {
-  background: var(--gold);
-  color: #24170a;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 /* ---------- position picker ---------- */
@@ -195,8 +197,8 @@ button {
 }
 
 .pos-card.is-mine {
-  border-color: var(--gold-deep);
-  background: linear-gradient(180deg, #2a2413, var(--card));
+  border-color: var(--accent-deep);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, var(--card)), var(--card));
 }
 
 .pos-abbr {
@@ -212,8 +214,8 @@ button {
 }
 
 .pos-card.is-mine .pos-abbr {
-  background: var(--gold);
-  color: #24170a;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .pos-name {
@@ -232,7 +234,7 @@ button {
 }
 
 .pos-tag {
-  color: var(--gold);
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -258,7 +260,7 @@ button {
 }
 
 .score-item.is-hot strong {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .situation {
@@ -308,9 +310,9 @@ button {
 }
 
 .sb-bag.is-on {
-  fill: var(--gold);
-  stroke: var(--gold);
-  filter: drop-shadow(0 0 4px var(--gold));
+  fill: var(--accent);
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 4px var(--accent));
 }
 
 .sb-outs,
@@ -339,7 +341,7 @@ button {
 }
 
 .sb-you .sb-value {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .sb-dots {
@@ -411,10 +413,11 @@ button {
   fill: #4c3320;
 }
 
-.fd-infield {
-  fill: #29734a;
-  stroke: #ffffff30;
-  stroke-width: 1;
+/* skinned infield: the base paths are chalk on dirt, not a grass diamond */
+.fd-baselines {
+  fill: none;
+  stroke: #ffffff45;
+  stroke-width: 1.4;
 }
 
 .fd-line {
@@ -429,8 +432,10 @@ button {
   stroke-dasharray: 3 5;
 }
 
-.fd-mound {
-  fill: #8a5a31;
+.fd-circle {
+  fill: #7c4f2b;
+  stroke: #ffffff45;
+  stroke-width: 1.4;
 }
 
 .fd-base {
@@ -438,7 +443,7 @@ button {
 }
 
 .fd-base.is-occupied {
-  fill: var(--gold);
+  fill: var(--accent);
   stroke: #fff;
   stroke-width: 1.5;
 }
@@ -513,7 +518,7 @@ button {
 }
 
 .fd-move-path.is-you {
-  stroke: var(--gold);
+  stroke: var(--accent);
   stroke-width: 3;
   opacity: 1;
 }
@@ -528,11 +533,11 @@ button {
 }
 
 .fd-throw.is-you line {
-  stroke: var(--gold);
+  stroke: var(--accent);
 }
 
 .fd-throw.is-you .fd-arrowhead {
-  fill: var(--gold);
+  fill: var(--accent);
 }
 
 .fd-dot {
@@ -549,16 +554,18 @@ button {
 }
 
 .fd-player.is-you .fd-dot {
-  fill: var(--gold);
+  fill: var(--accent);
   stroke: #fff;
 }
 
 .fd-player.is-you .fd-dot-label {
-  fill: #24170a;
+  fill: var(--on-accent);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
 }
 
 .fd-you-glow {
-  fill: var(--gold);
+  fill: var(--accent);
   opacity: 0.22;
 }
 
@@ -566,25 +573,11 @@ button {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.6px;
-  fill: var(--gold);
+  fill: var(--accent);
   text-anchor: middle;
   paint-order: stroke;
   stroke: #0d1522;
   stroke-width: 2.5;
-}
-
-.fd-you-badge circle {
-  fill: var(--gold);
-  stroke: #0d1522;
-  stroke-width: 1.6;
-}
-
-.fd-you-badge text {
-  font-size: 9px;
-  font-weight: 800;
-  fill: #24170a;
-  text-anchor: middle;
-  font-variant-numeric: tabular-nums;
 }
 
 .fd-player.is-clickable {
@@ -623,8 +616,8 @@ button {
 }
 
 .job-btn.is-active {
-  background: linear-gradient(180deg, #3a3050, var(--card-2));
-  border-color: var(--gold);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 18%, var(--card-2)), var(--card-2));
+  border-color: var(--accent);
 }
 
 .job-label {
@@ -663,9 +656,9 @@ button {
 }
 
 .target-btn.is-active {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #24170a;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
 }
 
 .primary {
@@ -674,12 +667,12 @@ button {
   min-height: 54px;
   margin-top: 14px;
   border-radius: 14px;
-  background: linear-gradient(180deg, var(--gold), var(--gold-deep));
-  color: #24170a;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  color: var(--on-accent);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.2px;
-  box-shadow: 0 6px 18px #f2a00733;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent-deep) 22%, transparent);
   transition: transform 0.1s, opacity 0.15s;
 }
 
@@ -733,8 +726,8 @@ button {
 }
 
 .feedback.is-correct {
-  border-color: var(--gold);
-  background: linear-gradient(180deg, #2b2413, var(--card));
+  border-color: var(--accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, var(--card)), var(--card));
   text-align: center;
 }
 
@@ -756,10 +749,10 @@ button {
 
 .star {
   font-size: 44px;
-  color: var(--gold);
+  color: var(--accent);
   line-height: 1;
   animation: pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1);
-  filter: drop-shadow(0 4px 14px #ffc73455);
+  filter: drop-shadow(0 4px 14px color-mix(in srgb, var(--accent) 40%, transparent));
 }
 
 @keyframes pop {
@@ -779,7 +772,7 @@ button {
   margin: 6px 0 6px;
   font-size: 17px;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .why {
@@ -808,7 +801,7 @@ button {
 }
 
 .assignments li.is-you {
-  background: #ffc7340f;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
 .assign-pos {
@@ -822,8 +815,8 @@ button {
 }
 
 .assignments li.is-you .assign-pos {
-  background: var(--gold);
-  color: #24170a;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .assign-job {
@@ -945,8 +938,8 @@ button {
 }
 
 .option.is-active {
-  border-color: var(--gold);
-  background: linear-gradient(180deg, #2b2413, var(--card));
+  border-color: var(--accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, var(--card)), var(--card));
 }
 
 .option-radio {
@@ -958,8 +951,8 @@ button {
 }
 
 .option.is-active .option-radio {
-  border-color: var(--gold);
-  background: radial-gradient(circle, var(--gold) 45%, transparent 46%);
+  border-color: var(--accent);
+  background: radial-gradient(circle, var(--accent) 45%, transparent 46%);
 }
 
 .option-note {
@@ -988,7 +981,7 @@ button {
 .stat-tile strong {
   display: block;
   font-size: 26px;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .stat-tile span {
@@ -1034,7 +1027,7 @@ button {
 .acc-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--green), var(--gold));
+  background: linear-gradient(90deg, var(--green), var(--accent));
 }
 
 .acc-pct {
@@ -1127,8 +1120,8 @@ button {
 
 .field input:focus {
   outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px #ffc73422;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 .field-number {
@@ -1205,9 +1198,9 @@ button {
 }
 
 .chip-btn.is-active {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #24170a;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
 }
 
 .field-note {
@@ -1226,10 +1219,36 @@ button {
 
 /* her spots, flagged on the picker's field */
 .fd-player.is-mine .fd-dot {
-  stroke: var(--gold);
+  stroke: var(--accent);
   stroke-width: 2.6;
 }
 
 .fd-player.is-mine .fd-dot-label {
-  fill: var(--gold);
+  fill: var(--accent);
+}
+
+/* ---------- team colour swatches ---------- */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 40px);
+  gap: 10px;
+}
+
+.swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--line);
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+
+.swatch:active {
+  transform: scale(0.92);
+}
+
+.swatch.is-active {
+  border-color: var(--bg);
+  box-shadow: 0 0 0 3px var(--swatch);
 }
